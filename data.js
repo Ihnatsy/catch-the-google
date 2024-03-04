@@ -1,7 +1,7 @@
-export const data = {
+const data = {
     fieldSize: {
-        rows: 5,
-        columns: 7
+        rows: 4,
+        columns: 6
     },
 
     coordinates: {
@@ -10,12 +10,12 @@ export const data = {
             y: 0
         },
         player1: {
-            x: 0,
+            x: 1,
             y: 1
         },
         player2: {
-            x: 2,
-            y: 2
+            x: 1,
+            y: 0
         }
     }
 }
@@ -31,7 +31,9 @@ timerId = setInterval(changeGoogleCoordinates, 1000)
 function changeGoogleCoordinates() {
     let newX = Math.floor(Math.random() * data.fieldSize.columns)
     let newY = Math.floor(Math.random() * data.fieldSize.rows)
-    while (newX === data.coordinates.google.x && newY === data.coordinates.google.y) {
+    while (newX === data.coordinates.google.x && newY === data.coordinates.google.y
+        || newX === data.coordinates.player1.x && newY === data.coordinates.player1.y
+        || newX === data.coordinates.player2.x && newY === data.coordinates.player2.y) {
         newX = Math.floor(Math.random() * data.fieldSize.columns)
         newY = Math.floor(Math.random() * data.fieldSize.rows)
     }
@@ -43,25 +45,25 @@ function changeGoogleCoordinates() {
 // Player 1
  function moveDownP1() {
     if (data.coordinates.player1.y < (data.fieldSize.rows-1)) {
-        data.coordinates.player1.y = data.coordinates.player1.y+1
+        data.coordinates.player1.y++
         notify()
     }
 }
 function moveUpP1() {
     if (data.coordinates.player1.y !== 0) {
-        data.coordinates.player1.y = data.coordinates.player1.y-1
+        data.coordinates.player1.y--
         notify()
     }
 }
 function moveRightP1() {
     if (data.coordinates.player1.x < (data.fieldSize.columns-1)) {
-        data.coordinates.player1.x = data.coordinates.player1.x+1
+        data.coordinates.player1.x++
         notify()
     }
 }
 function moveLeftP1() {
     if (data.coordinates.player1.x !== 0) {
-        data.coordinates.player1.x = data.coordinates.player1.x-1
+        data.coordinates.player1.x--
         notify()
     }
 }
@@ -69,25 +71,25 @@ function moveLeftP1() {
 // Player 2
 function moveDownP2() {
     if (data.coordinates.player2.y < (data.fieldSize.rows-1)) {
-        data.coordinates.player2.y = data.coordinates.player2.y+1
+        data.coordinates.player2.y++
         notify()
     }
 }
 function moveUpP2() {
     if (data.coordinates.player2.y !== 0) {
-        data.coordinates.player2.y = data.coordinates.player2.y-1
+        data.coordinates.player2.y--
         notify()
     }
 }
 function moveRightP2() {
     if (data.coordinates.player2.x < (data.fieldSize.columns-1)) {
-        data.coordinates.player2.x = data.coordinates.player2.x+1
+        data.coordinates.player2.x++
         notify()
     }
 }
 function moveLeftP2() {
     if (data.coordinates.player2.x !== 0) {
-        data.coordinates.player2.x = data.coordinates.player2.x-1
+        data.coordinates.player2.x--
         notify()
     }
 }
@@ -120,3 +122,30 @@ document.addEventListener('keydown', function(event) {
         moveLeftP2()
     }
 });
+
+// selectors / getters
+
+ export function getGoogleCoordinates() {
+     return {
+         x: data.coordinates.google.x,
+         y: data.coordinates.google.y
+     }
+ }
+ export function getPlayer1Coordinates() {
+     return {
+         x: data.coordinates.player1.x,
+         y: data.coordinates.player1.y,
+     }
+ }
+ export function getPlayer2Coordinates() {
+     return {
+         x: data.coordinates.player2.x,
+         y: data.coordinates.player2.y,
+     }
+ }
+ export function getFieldSize() {
+     return {
+         rows: data.fieldSize.rows,
+         columns: data.fieldSize.columns
+     }
+}
