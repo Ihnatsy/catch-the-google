@@ -3,3 +3,10 @@ table td {
   height: 85px;
   border: 1px solid forestgreen;
 }
+.pointsContainer {
+  width: 350px;
+  font-size: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
