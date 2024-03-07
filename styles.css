@@ -1,3 +1,16 @@
+
+
+.settingsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.oneSettingContainer {
+  display: flex;
+  flex-direction: column;
+}
+
 table td {
   width: 85px;
   height: 85px;
