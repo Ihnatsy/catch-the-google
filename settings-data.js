@@ -12,8 +12,8 @@ export const settingsData = [
     {
         id: 'Points to win',
         title: 'Points to win',
-        textValue: ['10 pts', '20 pts', '30 pts', '40 pts', '50 pts'],
-        value: [10, 20, 30, 40, 50]
+        textValue: ['1 pts', '3 pts', '20 pts', '30 pts', '40 pts', '50 pts'],
+        value: [1, 3, 20, 30, 40, 50]
     },
     // time:
     {
@@ -96,9 +96,11 @@ export function getSettingElement(settingType) {
 function getTitle(settingType) {
     return settingType.title
 }
+
 function textElement(settingType) {
     return settingType.textValue
 }
+
 function valueElement(settingType) {
     return settingType.value
 }

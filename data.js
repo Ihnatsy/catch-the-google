@@ -3,39 +3,47 @@ const GAME_STATUSES = {
     IN_PROCESS: 'in-process',
     FINISH: 'finish'
 }
+const RESULT_STATUSES = {
+    IN_PROCESS: 'in-process',
+    WINp1: 'winP1',
+    WINp2: 'winP2',
+    LOSE: 'lose'
+}
 
 export const data = {
     gameStatus: GAME_STATUSES.SETTINGS,
+    resultStatus: RESULT_STATUSES.IN_PROCESS,
 
     fieldSize: {
         rows: 4,
         columns: 4
     },
 
-    pointsToWin: 10,
+    pointsToWin: 1,
     time: 60000,
     gameMode: 'Single',
     ['Choose who you will play for?']: 'Catching',
 
     coordinates: {
         google: {
-            x: 0,
-            y: 0
+            x: null,
+            y: null
         },
         player1: {
-            x: 1,
-            y: 1
+            x: null,
+            y: null
         },
         player2: {
-            x: 1,
-            y: 0
+            x: null,
+            y: null
         }
     },
 
     points: {
         catchPointsP1: 0,
         catchPointsP2: 0
-    }
+    },
+
 }
 
 let notify = null
@@ -45,7 +53,6 @@ export function subscribe(subscriber) {
 }
 
 let timerId
-timerId = setInterval(changeGoogleCoordinates, 3000)
 
 function changeGoogleCoordinates() {
     let newX = Math.floor(Math.random() * data.fieldSize.columns)
@@ -58,8 +65,45 @@ function changeGoogleCoordinates() {
     }
     data.coordinates.google.x = newX
     data.coordinates.google.y = newY
+    console.log(data.points.catchPointsP1 +'  '+ data.pointsToWin)
     notify()
 }
+
+export function startGame() {
+    data.gameStatus = GAME_STATUSES.IN_PROCESS
+    setCoordinates()
+    notify()
+    timerId = setInterval(changeGoogleCoordinates, 3000)
+}
+
+function setCoordinates() {
+    let P1X = Math.floor(Math.random() * data.fieldSize.columns)
+    let P1Y = Math.floor(Math.random() * data.fieldSize.rows)
+    data.coordinates.player1.x = P1X
+    data.coordinates.player1.y = P1Y
+
+    let P2X = Math.floor(Math.random() * data.fieldSize.columns)
+    let P2Y = Math.floor(Math.random() * data.fieldSize.rows)
+
+    while (P2X === data.coordinates.player1.x && P2Y === data.coordinates.player1.y) {
+        console.log('пересчёт')
+        P2X = Math.floor(Math.random() * data.fieldSize.columns)
+        P2Y = Math.floor(Math.random() * data.fieldSize.rows)
+    }
+    data.coordinates.player2.x = P2X
+    data.coordinates.player2.y = P2Y
+
+    let GX = Math.floor(Math.random() * data.fieldSize.columns)
+    let GY = Math.floor(Math.random() * data.fieldSize.rows)
+    while ((GX === data.coordinates.player1.x && GY === data.coordinates.player1.y)
+    || (GX === data.coordinates.player2.x && GY === data.coordinates.player2.y)) {
+        GX = Math.floor(Math.random() * data.fieldSize.columns)
+        GY = Math.floor(Math.random() * data.fieldSize.rows)
+    }
+    data.coordinates.google.x = GX
+    data.coordinates.google.y = GY
+}
+
 
 // Player 1
 function moveDownP1() {
@@ -73,6 +117,7 @@ function moveDownP1() {
         notify()
     }
 }
+
 function moveUpP1() {
     if (data.coordinates.player1.x === data.coordinates.player2.x
         && data.coordinates.player1.y - 1 === data.coordinates.player2.y) {
@@ -84,6 +129,7 @@ function moveUpP1() {
         notify()
     }
 }
+
 function moveRightP1() {
     if (data.coordinates.player1.x + 1 === data.coordinates.player2.x
         && data.coordinates.player1.y === data.coordinates.player2.y) {
@@ -95,6 +141,7 @@ function moveRightP1() {
         notify()
     }
 }
+
 function moveLeftP1() {
     if (data.coordinates.player1.x - 1 === data.coordinates.player2.x
         && data.coordinates.player1.y === data.coordinates.player2.y) {
@@ -106,6 +153,7 @@ function moveLeftP1() {
         notify()
     }
 }
+
 // Player 2
 function moveDownP2() {
     if (data.coordinates.player1.x === data.coordinates.player2.x
@@ -118,6 +166,7 @@ function moveDownP2() {
         notify()
     }
 }
+
 function moveUpP2() {
     if (data.coordinates.player1.x === data.coordinates.player2.x
         && data.coordinates.player1.y === data.coordinates.player2.y - 1) {
@@ -129,6 +178,7 @@ function moveUpP2() {
         notify()
     }
 }
+
 function moveRightP2() {
     if (data.coordinates.player1.x === data.coordinates.player2.x + 1
         && data.coordinates.player1.y === data.coordinates.player2.y) {
@@ -140,6 +190,7 @@ function moveRightP2() {
         notify()
     }
 }
+
 function moveLeftP2() {
     if (data.coordinates.player1.x === data.coordinates.player2.x - 1
         && data.coordinates.player1.y === data.coordinates.player2.y) {
@@ -185,20 +236,42 @@ document.addEventListener('keydown', function (event) {
 function addCatchPointsToP1() {
     if (data.coordinates.google.x === data.coordinates.player1.x
         && data.coordinates.google.y === data.coordinates.player1.y) {
-        data.points.catchPointsP1++
+        ++data.points.catchPointsP1
         clearInterval(timerId)
-        changeGoogleCoordinates()
-        timerId = setInterval(changeGoogleCoordinates, 2000)
+        if (Number(data.points.catchPointsP1) === Number(data.pointsToWin)) {
+            data.gameStatus = 'finish'
+            data.resultStatus = 'winP1'
+            notify()
+        } else {
+            changeGoogleCoordinates()
+            timerId = setInterval(changeGoogleCoordinates, 2000)
+        }
     }
 }
+
 function addCatchPointsToP2() {
     if (data.coordinates.google.x === data.coordinates.player2.x
         && data.coordinates.google.y === data.coordinates.player2.y) {
         data.points.catchPointsP2++
         clearInterval(timerId)
-        changeGoogleCoordinates()
-        timerId = setInterval(changeGoogleCoordinates, 2000)
+        if (Number(data.points.catchPointsP2) === Number(data.pointsToWin)) {
+            data.gameStatus = 'finish'
+            data.resultStatus = 'winP2'
+            notify()
+        } else {
+            changeGoogleCoordinates()
+            timerId = setInterval(changeGoogleCoordinates, 2000)
+        }
     }
+}
+
+export function playAgain() {
+    data.resultStatus = RESULT_STATUSES.IN_PROCESS
+    data.gameStatus = GAME_STATUSES.SETTINGS
+    data.points.catchPointsP1 = 0
+    data.points.catchPointsP2 = 0
+    data.pointsToWin = 1
+    notify()
 }
 
 // selectors / getters
@@ -209,27 +282,41 @@ export function getGoogleCoordinates() {
         y: data.coordinates.google.y
     }
 }
+
 export function getPlayer1Coordinates() {
     return {
         x: data.coordinates.player1.x,
         y: data.coordinates.player1.y,
     }
 }
+
 export function getPlayer2Coordinates() {
     return {
         x: data.coordinates.player2.x,
         y: data.coordinates.player2.y,
     }
 }
+
 export function getFieldSize() {
     return {
         rows: data.fieldSize.rows,
         columns: data.fieldSize.columns
     }
 }
+
 export function getPlayerPoints() {
     return {
         Player1Points: data.points.catchPointsP1,
         Player2Points: data.points.catchPointsP2
     }
 }
+
+export function getGameStatus() {
+    return {status: data.gameStatus}
+}
+
+export function getResultStatus() {
+    return {result: data.resultStatus}
+}
+
+
