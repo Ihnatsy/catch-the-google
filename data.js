@@ -1,3 +1,5 @@
+import {playCatch} from "./audio/playCatch.js";
+
 const GAME_STATUSES = {
     SETTINGS: 'settings',
     IN_PROCESS: 'in-process',
@@ -9,6 +11,8 @@ const RESULT_STATUSES = {
     WINp2: 'winP2',
     LOSE: 'lose'
 }
+
+
 
 export const data = {
     gameStatus: GAME_STATUSES.SETTINGS,
@@ -65,7 +69,6 @@ function changeGoogleCoordinates() {
     }
     data.coordinates.google.x = newX
     data.coordinates.google.y = newY
-    console.log(data.points.catchPointsP1 +'  '+ data.pointsToWin)
     notify()
 }
 
@@ -73,7 +76,7 @@ export function startGame() {
     data.gameStatus = GAME_STATUSES.IN_PROCESS
     setCoordinates()
     notify()
-    timerId = setInterval(changeGoogleCoordinates, 3000)
+    timerId = setInterval(changeGoogleCoordinates, 1000)
 }
 
 function setCoordinates() {
@@ -236,6 +239,7 @@ document.addEventListener('keydown', function (event) {
 function addCatchPointsToP1() {
     if (data.coordinates.google.x === data.coordinates.player1.x
         && data.coordinates.google.y === data.coordinates.player1.y) {
+        playCatch()
         ++data.points.catchPointsP1
         clearInterval(timerId)
         if (data.points.catchPointsP1 === data.pointsToWin) {
@@ -244,7 +248,7 @@ function addCatchPointsToP1() {
             notify()
         } else {
             changeGoogleCoordinates()
-            timerId = setInterval(changeGoogleCoordinates, 2000)
+            timerId = setInterval(changeGoogleCoordinates, 1000)
         }
     }
 }
@@ -252,6 +256,7 @@ function addCatchPointsToP1() {
 function addCatchPointsToP2() {
     if (data.coordinates.google.x === data.coordinates.player2.x
         && data.coordinates.google.y === data.coordinates.player2.y) {
+        playCatch()
         data.points.catchPointsP2++
         clearInterval(timerId)
         if (Number(data.points.catchPointsP2) === Number(data.pointsToWin)) {
@@ -260,7 +265,7 @@ function addCatchPointsToP2() {
             notify()
         } else {
             changeGoogleCoordinates()
-            timerId = setInterval(changeGoogleCoordinates, 2000)
+            timerId = setInterval(changeGoogleCoordinates, 1000)
         }
     }
 }
