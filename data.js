@@ -238,7 +238,7 @@ function addCatchPointsToP1() {
         && data.coordinates.google.y === data.coordinates.player1.y) {
         ++data.points.catchPointsP1
         clearInterval(timerId)
-        if (Number(data.points.catchPointsP1) === Number(data.pointsToWin)) {
+        if (data.points.catchPointsP1 === data.pointsToWin) {
             data.gameStatus = 'finish'
             data.resultStatus = 'winP1'
             notify()

@@ -1,12 +1,14 @@
 
-import {getSettingElement, settingsData} from "../../settings-data.js";
+import {getSettingDataLength, getSettingElement, getSetElement } from "../../settings-data.js";
 
 export function renderSetting() {
+    const settingsLength = getSettingDataLength()
+
     const settingsContainer = document.createElement('div')
     settingsContainer.className='settingsContainer'
 
-    for (let i = 0; i < settingsData.length; i++) {
-        const setElement = getSettingElement(settingsData[i])
+    for (let i = 0; i < settingsLength; i++) {
+        const setElement = getSettingElement(getSetElement(i))
         settingsContainer.append(setElement)
     }
 

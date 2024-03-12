@@ -1,35 +1,35 @@
 import {data} from "./data.js";
 
-export const settingsData = [
-    // ['Grid size']:
+const settingsData = [
+    // Grid size
     {
         id: 'Grid size',
         title: 'Grid size',
         textValue: ['4x4', '5x5', '6x6', '7x7', '8x8'],
         value: [4, 5, 6, 7, 8]
     },
-    // ['Points to win']:
+    // Points to win
     {
         id: 'Points to win',
         title: 'Points to win',
         textValue: ['1 pts', '3 pts', '20 pts', '30 pts', '40 pts', '50 pts'],
         value: [1, 3, 20, 30, 40, 50]
     },
-    // time:
+    // Time:
     {
         id: 'Time',
         title: 'Time',
         textValue: ['1 min', '2 min', '3 min', '4 min', '5 min'],
         value: [60000, 120000, 180000, 240000, 300000]
     },
-    // ['Game mode']:
+    // Game mode
     {
         id: 'Game mode',
         title: 'Game mode',
         textValue: ['Single', 'Multiplayer'],
         value: ['Single', 'Multiplayer']
     },
-    //['Choose who you will play for?']:
+    //Choose who you will play for?
     {
         id: 'Choose who you will play for?',
         title: 'Choose who you will play for?',
@@ -76,7 +76,7 @@ export function getSettingElement(settingType) {
             data.fieldSize.columns = this.value
         }
         if (settingType.id === 'Points to win') {
-            data.pointsToWin = this.value
+            data.pointsToWin = Number(this.value)
         }
         if (settingType.id === 'Time') {
             data.time = this.value
@@ -103,4 +103,11 @@ function textElement(settingType) {
 
 function valueElement(settingType) {
     return settingType.value
+}
+
+export function getSettingDataLength() {
+    return settingsData.length
+}
+export function getSetElement(index) {
+    return settingsData[index]
 }
